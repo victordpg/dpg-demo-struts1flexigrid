@@ -1,0 +1,46 @@
+blank项目总结：
+此项目使用struts1.3与FLEXIGRID轻量级的grid插件。实现了，数据库mysql查询与前台显示，文件预览的功能。
+熟悉了该JS插件的使用，与流的相关操作。
+
+1. 预览，下载文件。需要注意浏览器版本的兼容性问题。
+			String agent = request.getHeader("USER-AGENT");
+			if(agent.indexOf("MSIE")==-1){
+				String enableName = new String(fileName.getBytes("UTF-8"),"ISO-8859-1");
+				response.setHeader("Content-Disposition","inline; filename=" + enableName );// attachment：作为附件打开；inline：在线打开
+			}else{
+				response.setHeader("Content-Disposition","inline; filename=" + java.net.URLEncoder.encode(fileName,"UTF-8") );// attachment：作为附件打开；inline：在线打开
+			}
+			
+2.	使用IE浏览器的时候无法在JAVASCRIPT的模窗口(window.showModalDialog)中预览和下载文件。
+	可以通过Servlet 或 action对文件进行预览与下载操作，或者通过windoe.open()。	
+    //注释掉下面两行模态窗口代码，因为IE无法下载或显示流文件（其他浏览器ModalDialog可以）
+    //var openStyle = "dialogHeight:600px; dialogWidth:800px; status:no; help:no; scroll:auto";
+    //window.showModalDialog(url, window.document, openStyle);
+    	
+3. 使用window.open(url, name, properties);的时候注意，name参数串中不能有特殊字符，甚至连空格都不可以。否则会报JS参数无效错误。
+
+4. 考虑到FLEXIGRID对IE浏览器的兼容，这里需要为Table加上div标签，否则在IE中会产生JS错误。
+		<div id="divTable">
+			<table id="gcibTable" style="display: none;"></table>
+		</div>
+    	
+5. Flexigrid 插件通过后台获取数据转换成json串之后传到前台，所以需要在项目中引入JSONObject相关插件包。   
+   该插件的查询以及排序功能可以参考SearchAction类中的代码。 	
+   
+6. 使用div标签对其内容进行水平居中。
+	<div style="margin:0 auto;width:800px"></div>   
+	
+7. 使用Flexigrid插件排序功能，需要注意。
+		<form id="queryForm" name="queryForm">
+			<table>
+				<tr>
+					<td>id:</td>
+					<td><input type="text" id="idPara" name="idPara" /></td>
+					<td>name:</td>
+					<td><input type="text" id="namePara" name="namePara" /></td>
+				</tr>
+				<tr>
+					<td colspan="2"><input type="button" id="queryBtn" value="查询"></td>
+				</tr>
+			</table>
+		</form>	
