@@ -6,4 +6,4 @@ CREATE TABLE `gcib` (
   `file` mediumblob,
   `filetype` varchar(45) default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1$$
+)
